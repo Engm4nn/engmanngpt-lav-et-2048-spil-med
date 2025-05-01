@@ -1,0 +1,3 @@
+# Delopgave 6: Implementer logik til at detektere spillets tilstand (vundet ved 2048, tabt når ingen flere træk er mulige)
+
+Koden implementerer logik til at detektere om spillet er vundet (når en 2048-brik er opnået) eller tabt (når ingen flere træk er mulige). gameState.js indeholder kernefunktionaliteten til tilstandskontrol, mens game.js viser hvordan denne logik kan integreres i det eksisterende spil.
