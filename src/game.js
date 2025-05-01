@@ -1,96 +1,199 @@
-// Spilkonstanter og variabler
-const GRID_SIZE = 4;
-const CELL_COUNT = GRID_SIZE * GRID_SIZE;
-let grid = [];
+// Kernelogik til at håndtere bevægelser og sammenlægning af ens brikker
 
-// DOM-elementer
-const gridContainer = document.getElementById('grid-container');
-const newGameButton = document.getElementById('new-game-button');
+class GameBoard {
+  constructor(size = 4) {
+    this.size = size;
+    this.grid = [];
+    this.initialize();
+  }
 
-// Initialiser spillet når siden indlæses
-document.addEventListener('DOMContentLoaded', () => {
-    setupGame();
-    newGameButton.addEventListener('click', setupGame);
-});
-
-/**
- * Opsætter spillet ved at initialisere grid og UI
- */
-function setupGame() {
-    // Nulstil grid
-    grid = [];
-    
-    // Initialiser grid med tomme celler
-    for (let i = 0; i < GRID_SIZE; i++) {
-        grid[i] = Array(GRID_SIZE).fill(0);
+  initialize() {
+    // Opret et tomt grid
+    this.grid = [];
+    for (let i = 0; i < this.size; i++) {
+      this.grid[i] = [];
+      for (let j = 0; j < this.size; j++) {
+        this.grid[i][j] = 0;
+      }
     }
     
-    // Nulstil UI
-    gridContainer.innerHTML = '';
-    
-    // Opret grid-celler i UI
-    for (let i = 0; i < CELL_COUNT; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('grid-cell');
-        gridContainer.appendChild(cell);
+    // Tilføj to startbrikker
+    this.addRandomTile();
+    this.addRandomTile();
+  }
+
+  addRandomTile() {
+    // Find alle ledige pladser
+    const emptyTiles = [];
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        if (this.grid[i][j] === 0) {
+          emptyTiles.push({ x: i, y: j });
+        }
+      }
     }
-    
-    // Tilføj to tilfældige brikker for at starte spillet
-    addRandomTile();
-    addRandomTile();
-    
-    // Opdater UI for at vise de nye brikker
-    updateGridUI();
+
+    // Hvis der er ledige pladser, tilføj en ny brik (2 eller 4)
+    if (emptyTiles.length > 0) {
+      const randomPosition = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+      this.grid[randomPosition.x][randomPosition.y] = Math.random() < 0.9 ? 2 : 4;
+      return true;
+    }
+    return false;
+  }
+
+  // Flyt brikker op
+  moveUp() {
+    let moved = false;
+    for (let j = 0; j < this.size; j++) {
+      for (let i = 1; i < this.size; i++) {
+        if (this.grid[i][j] !== 0) {
+          let row = i;
+          while (row > 0 && this.grid[row - 1][j] === 0) {
+            this.grid[row - 1][j] = this.grid[row][j];
+            this.grid[row][j] = 0;
+            row--;
+            moved = true;
+          }
+          if (row > 0 && this.grid[row - 1][j] === this.grid[row][j]) {
+            this.grid[row - 1][j] *= 2;
+            this.grid[row][j] = 0;
+            moved = true;
+          }
+        }
+      }
+    }
+    return moved;
+  }
+
+  // Flyt brikker ned
+  moveDown() {
+    let moved = false;
+    for (let j = 0; j < this.size; j++) {
+      for (let i = this.size - 2; i >= 0; i--) {
+        if (this.grid[i][j] !== 0) {
+          let row = i;
+          while (row < this.size - 1 && this.grid[row + 1][j] === 0) {
+            this.grid[row + 1][j] = this.grid[row][j];
+            this.grid[row][j] = 0;
+            row++;
+            moved = true;
+          }
+          if (row < this.size - 1 && this.grid[row + 1][j] === this.grid[row][j]) {
+            this.grid[row + 1][j] *= 2;
+            this.grid[row][j] = 0;
+            moved = true;
+          }
+        }
+      }
+    }
+    return moved;
+  }
+
+  // Flyt brikker til venstre
+  moveLeft() {
+    let moved = false;
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 1; j < this.size; j++) {
+        if (this.grid[i][j] !== 0) {
+          let col = j;
+          while (col > 0 && this.grid[i][col - 1] === 0) {
+            this.grid[i][col - 1] = this.grid[i][col];
+            this.grid[i][col] = 0;
+            col--;
+            moved = true;
+          }
+          if (col > 0 && this.grid[i][col - 1] === this.grid[i][col]) {
+            this.grid[i][col - 1] *= 2;
+            this.grid[i][col] = 0;
+            moved = true;
+          }
+        }
+      }
+    }
+    return moved;
+  }
+
+  // Flyt brikker til højre
+  moveRight() {
+    let moved = false;
+    for (let i = 0; i < this.size; i++) {
+      for (let j = this.size - 2; j >= 0; j--) {
+        if (this.grid[i][j] !== 0) {
+          let col = j;
+          while (col < this.size - 1 && this.grid[i][col + 1] === 0) {
+            this.grid[i][col + 1] = this.grid[i][col];
+            this.grid[i][col] = 0;
+            col++;
+            moved = true;
+          }
+          if (col < this.size - 1 && this.grid[i][col + 1] === this.grid[i][col]) {
+            this.grid[i][col + 1] *= 2;
+            this.grid[i][col] = 0;
+            moved = true;
+          }
+        }
+      }
+    }
+    return moved;
+  }
+
+  // Håndter bevægelse baseret på retning
+  move(direction) {
+    let moved = false;
+    switch (direction) {
+      case 'up':
+        moved = this.moveUp();
+        break;
+      case 'down':
+        moved = this.moveDown();
+        break;
+      case 'left':
+        moved = this.moveLeft();
+        break;
+      case 'right':
+        moved = this.moveRight();
+        break;
+    }
+
+    // Hvis der skete en bevægelse, tilføj en ny brik
+    if (moved) {
+      this.addRandomTile();
+    }
+
+    return moved;
+  }
+
+  isGameOver() {
+    // Tjek om der er ledige pladser
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        if (this.grid[i][j] === 0) {
+          return false;
+        }
+      }
+    }
+
+    // Tjek om der er mulige sammenlægninger
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        const current = this.grid[i][j];
+        // Tjek nabo til højre
+        if (j < this.size - 1 && current === this.grid[i][j + 1]) {
+          return false;
+        }
+        // Tjek nabo nedenunder
+        if (i < this.size - 1 && current === this.grid[i + 1][j]) {
+          return false;
+        }
+      }
+    }
+
+    return true; // Ingen ledige pladser og ingen mulige sammenlægninger
+  }
 }
 
-/**
- * Tilføjer en tilfældig brik (2 eller 4) på en ledig plads i grid
- */
-function addRandomTile() {
-    // Find alle ledige pladser (celler med værdi 0)
-    const emptyCells = [];
-    
-    for (let row = 0; row < GRID_SIZE; row++) {
-        for (let col = 0; col < GRID_SIZE; col++) {
-            if (grid[row][col] === 0) {
-                emptyCells.push({ row, col });
-            }
-        }
-    }
-    
-    // Hvis der ikke er ledige pladser, gør ingenting
-    if (emptyCells.length === 0) return;
-    
-    // Vælg en tilfældig ledig plads
-    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    
-    // Generer enten 2 (90% chance) eller 4 (10% chance)
-    const value = Math.random() < 0.9 ? 2 : 4;
-    
-    // Placer den nye brik på den valgte plads
-    grid[randomCell.row][randomCell.col] = value;
-}
-
-/**
- * Opdaterer UI for at afspejle det aktuelle grid
- */
-function updateGridUI() {
-    const cells = document.querySelectorAll('.grid-cell');
-    
-    for (let row = 0; row < GRID_SIZE; row++) {
-        for (let col = 0; col < GRID_SIZE; col++) {
-            const index = row * GRID_SIZE + col;
-            const value = grid[row][col];
-            
-            cells[index].textContent = value !== 0 ? value : '';
-            
-            // Nulstil klasser
-            cells[index].className = 'grid-cell';
-            
-            // Tilføj klasse baseret på værdi
-            if (value !== 0) {
-                cells[index].classList.add(`tile-${value}`);
-            }
-        }
-    }
+// Eksporter klassen for at kunne bruge den i andre filer
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { GameBoard };
 }
