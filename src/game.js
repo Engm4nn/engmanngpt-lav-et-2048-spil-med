@@ -1,77 +1,137 @@
-// Antager at vi har en eksisterende spillogik og et board-array
-// Dette er et eksempel på hvordan gameState.js kan integreres i hovedspillet
+// Game.js - Highscore og reset funktionalitet
 
-// Importer gameState funktioner (hvis du bruger moduler)
-// const { isGameWon, isGameLost, checkGameState } = require('./gameState.js');
+// Globale variabler
+let score = 0;
+let gameActive = false;
 
-// Eksempel på hvordan gameState kan integreres i spillets hovedlogik
-function handleMove(direction) {
-  // Antager at disse funktioner eksisterer i den eksisterende kode
-  let moved = false;
-  
-  switch(direction) {
-    case 'up':
-      moved = slideUp();
-      break;
-    case 'down':
-      moved = slideDown();
-      break;
-    case 'left':
-      moved = slideLeft();
-      break;
-    case 'right':
-      moved = slideRight();
-      break;
-  }
-  
-  // Hvis der blev foretaget et gyldigt træk
-  if (moved) {
-    // Tilføj en ny 2 eller 4 brik til brættet
-    addNewTile();
+// DOM elementer
+const currentScoreElement = document.getElementById('current-score');
+const resetButton = document.getElementById('reset-button');
+const highscoreList = document.getElementById('highscore-list');
+const gameArea = document.getElementById('game-area');
+
+// Initialisering af spillet
+function initGame() {
+    // Vis highscores ved opstart
+    displayHighScores();
     
-    // Kontroller spillets tilstand efter trækket
-    const gameState = checkGameState(board);
+    // Event listener til reset-knap
+    resetButton.addEventListener('click', resetGame);
     
-    // Håndter spillets tilstand
-    if (gameState.status !== 'ongoing') {
-      displayGameResult(gameState);
+    // Simuler spil start (i et rigtigt spil ville dette være en del af spillogikken)
+    resetGame();
+}
+
+// Funktion til at starte et nyt spil
+function resetGame() {
+    // Nulstil score
+    score = 0;
+    updateScoreDisplay();
+    
+    // Ryd spilområdet
+    gameArea.innerHTML = '<p>Spillet er startet! Dette er en placeholder for spillets indhold.</p>';
+    
+    // Markér spillet som aktivt
+    gameActive = true;
+    
+    // Her ville du tilføje din spillogik
+    // ...
+    
+    console.log('Nyt spil startet');
+}
+
+// Opdater score display
+function updateScoreDisplay() {
+    currentScoreElement.textContent = score;
+}
+
+// Simuler at spilleren scorer point (i et rigtigt spil ville dette være en del af spillogikken)
+function addScore(points) {
+    if (gameActive) {
+        score += points;
+        updateScoreDisplay();
     }
-  }
 }
 
-/**
- * Viser spillets resultat til brugeren
- * @param {Object} gameState - Objekt med spillets tilstand
- */
-function displayGameResult(gameState) {
-  // Her kan du implementere hvordan resultatet skal vises
-  // F.eks. ved at vise en modal dialog eller ændre UI
-  
-  if (gameState.status === 'won') {
-    // Vis vinder-besked
-    alert(gameState.message);
-    // Eventuelt tilbyd at fortsætte spillet for at opnå højere score
-  } else if (gameState.status === 'lost') {
-    // Vis taber-besked
-    alert(gameState.message);
-    // Eventuelt tilbyd at starte et nyt spil
-  }
+// Afslut spillet og gem highscore
+function endGame() {
+    if (!gameActive) return;
+    
+    gameActive = false;
+    
+    // Gem highscore hvis den er høj nok
+    saveHighScore(score);
+    
+    // Vis opdaterede highscores
+    displayHighScores();
+    
+    console.log('Spil afsluttet med score:', score);
 }
 
-// Lyt efter tastetryk for at styre spillet
-document.addEventListener('keydown', function(event) {
-  switch(event.key) {
-    case 'ArrowUp':
-      handleMove('up');
-      break;
-    case 'ArrowDown':
-      handleMove('down');
-      break;
-    case 'ArrowLeft':
-      handleMove('left');
-      break;
-    case 'ArrowRight':
-      handleMove('right');
-      break;
-  }
+// Gem highscore i localStorage
+function saveHighScore(newScore) {
+    // Hent eksisterende highscores eller opret en tom array
+    let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    
+    // Tilføj den nye score
+    highScores.push(newScore);
+    
+    // Sorter scores i faldende rækkefølge
+    highScores.sort((a, b) => b - a);
+    
+    // Behold kun de 10 højeste scores
+    highScores = highScores.slice(0, 10);
+    
+    // Gem tilbage i localStorage
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+}
+
+// Vis highscores fra localStorage
+function displayHighScores() {
+    // Ryd nuværende liste
+    highscoreList.innerHTML = '';
+    
+    // Hent highscores fra localStorage
+    const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    
+    // Vis hver score i listen
+    highScores.forEach(score => {
+        const li = document.createElement('li');
+        li.textContent = score;
+        highscoreList.appendChild(li);
+    });
+    
+    // Vis en besked hvis der ikke er nogen highscores endnu
+    if (highScores.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'Ingen highscores endnu';
+        highscoreList.appendChild(li);
+    }
+}
+
+// Test funktioner for at demonstrere funktionaliteten
+function testGameFunctionality() {
+    // Simuler at spilleren scorer point
+    setTimeout(() => {
+        addScore(10);
+        console.log('Tilføjet 10 point');
+    }, 2000);
+    
+    setTimeout(() => {
+        addScore(20);
+        console.log('Tilføjet 20 point');
+    }, 4000);
+    
+    // Simuler at spillet afsluttes efter 6 sekunder
+    setTimeout(() => {
+        endGame();
+    }, 6000);
+}
+
+// Initialiser spillet når siden er indlæst
+document.addEventListener('DOMContentLoaded', () => {
+    initGame();
+    
+    // Kun til demonstration - fjern i et rigtigt spil
+    testGameFunctionality();
 });
