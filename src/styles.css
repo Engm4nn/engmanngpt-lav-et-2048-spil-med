@@ -1,150 +1,90 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #faf8ef;
-    color: #776e65;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.game-container {
-    width: 100%;
-    max-width: 500px;
-    padding: 15px;
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.game-board {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 15px;
-    background-color: #bbada0;
-    border-radius: 6px;
-    padding: 15px;
-    position: relative;
-}
-
+/* Animation for sliding tiles */
 .tile {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
-    border-radius: 3px;
-    transition: all 0.2s ease;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Farver baseret på talværdi */
-.tile[data-value="2"] {
-    background-color: #eee4da;
+/* Animation for merging tiles */
+.tile.merge {
+  animation: pop 0.3s ease-in-out;
 }
 
-.tile[data-value="4"] {
-    background-color: #ede0c8;
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.tile[data-value="8"] {
-    background-color: #f2b179;
-    color: #f9f6f2;
+/* Animation for new tiles appearing */
+.tile.new {
+  animation: appear 0.2s ease-in-out;
 }
 
-.tile[data-value="16"] {
-    background-color: #f59563;
-    color: #f9f6f2;
+@keyframes appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-.tile[data-value="32"] {
-    background-color: #f67c5f;
-    color: #f9f6f2;
+/* Animation for sliding tiles in different directions */
+.tile.slide-left {
+  animation: slideLeft 0.3s ease-in-out;
 }
 
-.tile[data-value="64"] {
-    background-color: #f65e3b;
-    color: #f9f6f2;
+.tile.slide-right {
+  animation: slideRight 0.3s ease-in-out;
 }
 
-.tile[data-value="128"] {
-    background-color: #edcf72;
-    color: #f9f6f2;
-    font-size: 20px;
+.tile.slide-up {
+  animation: slideUp 0.3s ease-in-out;
 }
 
-.tile[data-value="256"] {
-    background-color: #edcc61;
-    color: #f9f6f2;
-    font-size: 20px;
+.tile.slide-down {
+  animation: slideDown 0.3s ease-in-out;
 }
 
-.tile[data-value="512"] {
-    background-color: #edc850;
-    color: #f9f6f2;
-    font-size: 20px;
+@keyframes slideLeft {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
-.tile[data-value="1024"] {
-    background-color: #edc53f;
-    color: #f9f6f2;
-    font-size: 18px;
+@keyframes slideRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
-.tile[data-value="2048"] {
-    background-color: #edc22e;
-    color: #f9f6f2;
-    font-size: 18px;
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.tile.empty {
-    background-color: rgba(238, 228, 218, 0.35);
-}
-
-/* Responsivt design */
-@media screen and (max-width: 480px) {
-    .game-container {
-        padding: 10px;
-    }
-    
-    .game-board {
-        gap: 10px;
-        padding: 10px;
-    }
-    
-    .tile {
-        font-size: 18px;
-    }
-    
-    .tile[data-value="128"],
-    .tile[data-value="256"],
-    .tile[data-value="512"] {
-        font-size: 16px;
-    }
-    
-    .tile[data-value="1024"],
-    .tile[data-value="2048"] {
-        font-size: 14px;
-    }
-}
-
-@media screen and (max-width: 320px) {
-    .game-board {
-        gap: 5px;
-        padding: 5px;
-    }
-    
-    .tile {
-        font-size: 16px;
-    }
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
