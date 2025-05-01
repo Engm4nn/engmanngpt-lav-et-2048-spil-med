@@ -1,90 +1,62 @@
-/* Animation for sliding tiles */
-.tile {
-  transition: transform 0.3s ease-in-out;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
 }
 
-/* Animation for merging tiles */
-.tile.merge {
-  animation: pop 0.3s ease-in-out;
+.game-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
+h1, h2 {
+    text-align: center;
+    color: #333;
 }
 
-/* Animation for new tiles appearing */
-.tile.new {
-  animation: appear 0.2s ease-in-out;
+#game-area {
+    min-height: 300px;
+    border: 2px solid #ddd;
+    margin-bottom: 20px;
+    border-radius: 4px;
 }
 
-@keyframes appear {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-/* Animation for sliding tiles in different directions */
-.tile.slide-left {
-  animation: slideLeft 0.3s ease-in-out;
+#reset-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.tile.slide-right {
-  animation: slideRight 0.3s ease-in-out;
+#reset-button:hover {
+    background-color: #45a049;
 }
 
-.tile.slide-up {
-  animation: slideUp 0.3s ease-in-out;
+.highscore-container {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
 }
 
-.tile.slide-down {
-  animation: slideDown 0.3s ease-in-out;
+#highscore-list {
+    padding-left: 30px;
 }
 
-@keyframes slideLeft {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideRight {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideUp {
-  0% {
-    transform: translateY(100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
+#highscore-list li {
+    margin-bottom: 5px;
+    font-size: 16px;
 }
