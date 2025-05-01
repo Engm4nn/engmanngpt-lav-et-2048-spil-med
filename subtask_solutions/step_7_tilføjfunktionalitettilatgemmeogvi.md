@@ -1,0 +1,3 @@
+# Delopgave 7: Tilføj funktionalitet til at gemme og vise highscore samt reset-knap til at starte et nyt spil
+
+Koden implementerer en highscore-funktionalitet med localStorage til at gemme scores, viser en sorteret liste over de 10 bedste scores, og tilføjer en reset-knap til at starte et nyt spil. Strukturen inkluderer HTML til brugergrænsefladen, CSS til styling, og JavaScript til spillogik og highscore-håndtering.
