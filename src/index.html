@@ -3,23 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spil med 4x4 Grid</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Spilplade med Brikker</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>4x4 Spil</h1>
-            <div class="score-container">
-                <p>Score: <span id="score">0</span></p>
-            </div>
-        </header>
-        
+    <div class="game-container">
+        <h1>Spilleplade</h1>
         <div class="game-board">
-            <!-- 4x4 grid vil blive genereret med JavaScript -->
+            <div class="tile" data-value="2">2</div>
+            <div class="tile" data-value="4">4</div>
+            <div class="tile" data-value="8">8</div>
+            <div class="tile" data-value="16">16</div>
+            <div class="tile" data-value="32">32</div>
+            <div class="tile" data-value="64">64</div>
+            <div class="tile" data-value="128">128</div>
+            <div class="tile" data-value="256">256</div>
+            <div class="tile" data-value="512">512</div>
+            <div class="tile" data-value="1024">1024</div>
+            <div class="tile" data-value="2048">2048</div>
+            <div class="tile empty"></div>
         </div>
     </div>
-    
     <script src="script.js"></script>
 </body>
 </html>
